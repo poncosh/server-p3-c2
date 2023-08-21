@@ -4,9 +4,9 @@ services:
     ports:
       - "5001:4000"
     environment:
-      - REDIS_STRING_URI=redis://default:gO93InAfmKaU1YzvLE4WsI10AEnNRg9N@redis-14064.c252.ap-southeast-1-1.ec2.cloud.redislabs.com:14064
-      - APP_API=http://localhost:4001
-      - USERS_API=http://localhost:4002
+      - REDIS_STRING_URI=${REDIS_STRING_URI}
+      - APP_API=${APP_API}
+      - USERS_API=${USERS_API}
   app:
     build: ./services/app
     ports:
