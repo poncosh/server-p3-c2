@@ -1,0 +1,23 @@
+services:
+  orchestrator:
+    build: ./orchestrator
+    ports:
+      - "5001:4000"
+    environment:
+      - REDIS_STRING_URI=redis://default:gO93InAfmKaU1YzvLE4WsI10AEnNRg9N@redis-14064.c252.ap-southeast-1-1.ec2.cloud.redislabs.com:14064
+      - APP_API=http://localhost:4001
+      - USERS_API=http://localhost:4002
+  app:
+    build: ./services/app
+    ports:
+      - "5002:4001"
+    environment:
+      - DATABASE_URI=${POSTGRES_SQL_STRING}
+      - SECRET_ACCESS_TOKEN=${SECRET_ACCESS_TOKEN}
+  user:
+    build: ./services/users
+    ports:
+      - "5003:4002"
+    environment:
+      - DATABASE_MONGO_URI=${DATABASE_MONGO_URI}
+      - DATABASE_MONGO_NAME=${DATABASE_MONGO_NAME}
