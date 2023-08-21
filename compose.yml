@@ -12,6 +12,7 @@ services:
     ports:
       - "5002:4001"
     environment:
+      - NODE_ENV=production
       - DATABASE_URI=${POSTGRES_SQL_STRING}
       - SECRET_ACCESS_TOKEN=${SECRET_ACCESS_TOKEN}
   user:
