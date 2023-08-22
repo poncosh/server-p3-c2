@@ -7,6 +7,11 @@
     "dev": "nodemon app",
     "start": "node app"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "node_modules/"
+    ]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
