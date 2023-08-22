@@ -8,4 +8,4 @@ RUN npm install -g nodemon
 
 COPY . .
 
-CMD ["nodemon", "app.js"]
+CMD ["nodemon", "--ignore", "node_modules/", "--exec", "app.js"]
