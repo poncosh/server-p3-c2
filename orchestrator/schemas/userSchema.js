@@ -17,16 +17,20 @@ const resolvers = {
   Query: {
     getUser: async (_, args) => {
       try {
-        const userCache = await redis.get("app:user");
+        const { UserMongoId } = args;
+        const userCache = await redis.get(`app:user${UserMongoId}`);
         if (userCache) {
           const user = JSON.parse(userCache);
           return user;
         } else {
-          const { UserMongoId } = args;
-
           const { data: user } = await axiosUsers.get(`/${UserMongoId}`);
 
-          await redis.del("app:user");
+          await redis.set(
+            `app:user${UserMongoId}`,
+            JSON.stringify(user),
+            "EX",
+            86400
+          );
           return user;
         }
       } catch (error) {
