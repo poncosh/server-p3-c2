@@ -11,6 +11,19 @@ const typeDefs = `#graphql
   type Query {
     getUser(UserMongoId: String): User
   }
+
+  input PostUser {
+    username: String
+    email: String
+    password: String
+    phoneNumber: String
+    address: String
+  }
+  
+  type Mutation {
+    addUser(data: PostUser): String
+    deleteUser(UserMongoId: String): String
+  }
 `;
 
 const resolvers = {
@@ -32,6 +45,42 @@ const resolvers = {
             86400
           );
           return user;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  Mutation: {
+    addUser: async (_, args) => {
+      try {
+        const { username, email, password, phoneNumber, address } = args.data;
+
+        await axiosUsers.post("/register", {
+          username,
+          email,
+          password,
+          phoneNumber,
+          address,
+        });
+
+        return `Success adding new user ${username}`;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    deleteUser: async (_, args) => {
+      try {
+        const { UserMongoId } = args;
+        const userCache = await redis.get(`app:user${UserMongoId}`);
+
+        if (userCache) {
+          await redis.del(`app:user${UserMongoId}`);
+          await axiosUsers.delete(`/${UserMongoId}`);
+          return `Success deleting user with id ${UserMongoId}`;
+        } else {
+          await axiosUsers.delete(`/${UserMongoId}`);
+          return `Success deleting user with id ${UserMongoId}`;
         }
       } catch (error) {
         console.log(error);

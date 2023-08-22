@@ -300,6 +300,7 @@ const putPost = async (req, res, next) => {
       await t.commit();
       return res.status(200).json({
         message: "Successfully edited requested post",
+        slug: data.slug,
       });
     }
 
@@ -314,6 +315,7 @@ const putPost = async (req, res, next) => {
       await t.commit();
       return res.status(200).json({
         message: "Successfully edited requested post",
+        slug: data.slug,
       });
     }
 
@@ -328,6 +330,7 @@ const putPost = async (req, res, next) => {
     await t.commit();
     return res.status(200).json({
       message: "Successfully edited requested post",
+      slug: data.slug,
     });
   } catch (error) {
     await t.rollback();
@@ -348,6 +351,8 @@ const deletePost = async (req, res, next) => {
       throw { name: "NotFound" };
     }
 
+    const slug = willDeletePost.slug;
+
     await Tag.destroy({
       where: {
         postId: postId,
@@ -363,7 +368,7 @@ const deletePost = async (req, res, next) => {
     });
 
     await t.commit();
-    res.sendStatus(204);
+    res.status(200).json(slug);
   } catch (error) {
     await t.rollback();
     next(error);

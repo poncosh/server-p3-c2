@@ -71,8 +71,23 @@ const login = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  try {
+    const { mongoId } = req.params;
+
+    await getDb()
+      .collection("users")
+      .deleteOne({ _id: new ObjectId(mongoId) });
+
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   readUser,
   login,
+  deleteUser,
 };

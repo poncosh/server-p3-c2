@@ -48,9 +48,19 @@ const typeDefs = `#graphql
     tags: [RawTag]
   }
 
+  input PutData {
+    title: String
+    content: String
+    imgUrl: String
+    categoryId: Int
+    tags: [RawTag]
+    postId: Int
+  }
+
   type Mutation {
     addPost(data: PostData): String
     deletePost(postId: Int): String
+    putPost(data: PutData): String
   }
 `;
 
@@ -93,7 +103,7 @@ const resolvers = {
           if (!post) throw { name: "NotFound" };
 
           await redis.set(
-            `app:products${slug}`,
+            `app:product${slug}`,
             JSON.stringify(post),
             "EX",
             86400
@@ -129,10 +139,37 @@ const resolvers = {
       try {
         const { postId } = args;
 
-        await axiosProducts.delete(`admin/posts/${postId}`);
+        const { data: slug } = await axiosProducts.delete(
+          `admin/posts/${postId}`
+        );
 
+        await redis.del(`app:product${slug}`);
         await redis.del("app:products");
+
         return `Success deleting post ${postId}`;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    putPost: async (_, args) => {
+      try {
+        const { title, content, imgUrl, categoryId, tags, postId } = args.data;
+
+        const { data: editPost } = await axiosProducts.put(
+          `/admin/posts/${postId}`,
+          {
+            title,
+            content,
+            imgUrl,
+            categoryId,
+            tags,
+          }
+        );
+
+        await redis.del(`app:product${editPost.slug}`);
+        await redis.del("app:products");
+
+        return `Success editing post ${postId}`;
       } catch (error) {
         console.log(error);
       }
