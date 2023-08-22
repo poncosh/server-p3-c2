@@ -2,7 +2,7 @@ services:
   orchestrator:
     build: ./orchestrator
     ports:
-      - "80:4000"
+      - "5001:4000"
     environment:
       - REDIS_STRING_URI=${REDIS_STRING_URI}
       - APP_API=${APP_API}
