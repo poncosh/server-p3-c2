@@ -205,7 +205,7 @@ const postPost = async (req, res, next) => {
       return res.status(201).json({
         message: "Successfully created new post",
         data: {
-          title: newPost.title,
+          id: newPost.id,
         },
       });
     }
@@ -226,7 +226,7 @@ const postPost = async (req, res, next) => {
     return res.status(201).json({
       message: "Successfully created new post",
       data: {
-        title: newPost.title,
+        id: newPost.id,
       },
     });
   } catch (error) {

@@ -111,7 +111,7 @@ const resolvers = {
       try {
         const { title, content, imgUrl, categoryId, tags } = args.data;
 
-        await axiosProducts.post("/admin/posts", {
+        const { data: newPost } = await axiosProducts.post("/admin/posts", {
           title,
           content,
           imgUrl,
@@ -120,7 +120,7 @@ const resolvers = {
         });
 
         await redis.del("app:products");
-        return `Success adding new post ${title}`;
+        return `Success adding new post with id ${newPost.data.id}`;
       } catch (error) {
         throw error;
       }
