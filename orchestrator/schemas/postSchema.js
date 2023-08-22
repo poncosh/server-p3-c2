@@ -65,7 +65,12 @@ const resolvers = {
         } else {
           const { data: posts } = await axiosProducts.get("/admin/posts");
 
-          await redis.set("app:products", JSON.stringify(posts), "EX", 86400);
+          await redis.set(
+            "app:products",
+            JSON.stringify(posts.data),
+            "EX",
+            86400
+          );
           return posts.data;
         }
       } catch (error) {
